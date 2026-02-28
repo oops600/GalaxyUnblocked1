@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galaxy - Hope you Enjoying Galaxy</title>
+  <style>
+    :root { --purple: #7c3aed; --dark: #0f001a; }
+    body {
+      margin: 0; padding: 0; font-family: Arial, sans-serif;
+      background: linear-gradient(#0f001a, #1a0033);
+      color: white; min-height: 100vh;
+      background-image: url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=2000');
+      background-size: cover; background-attachment: fixed;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      position: relative;
+    }
+    header { text-align: center; padding: 40px 20px; }
+    h1 { 
+      font-size: 5.5em; 
+      margin: 0 0 20px; 
+      text-shadow: 0 0 35px #c084fc, 0 0 70px #a855f7; 
+      letter-spacing: 2px;
+    }
+    .tagline { 
+      font-size: 1.9em; 
+      opacity: 0.95; 
+      margin: 0 0 60px; 
+      font-style: italic;
+      text-shadow: 0 0 15px #c084fc;
+    }
+    
+    .search-container { max-width: 900px; width: 90%; }
+    form { position: relative; }
+    input[type="text"] {
+      width: 100%; padding: 25px 30px; font-size: 1.6em;
+      border: none; border-radius: 60px; background: rgba(255,255,255,0.15);
+      color: white; backdrop-filter: blur(12px); box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+      transition: all 0.3s;
+    }
+    input:focus { outline: none; box-shadow: 0 0 0 6px #a855f7; transform: scale(1.02); }
+    input::placeholder { color: #ccc; }
+
+    .buttons { margin-top: 40px; text-align: center; }
+    button {
+      padding: 16px 50px; font-size: 1.3em; background: var(--purple);
+      border: none; border-radius: 50px; color: white; cursor: pointer;
+      transition: 0.3s; margin: 0 10px;
+    }
+    button:hover { background: #a855f7; transform: scale(1.08); }
+
+    /* Owner Message Banner */
+    #ownerBanner {
+      position: fixed; top: 0; left: 0; width: 100%;
+      background: linear-gradient(#4c1d95, #6b21a8);
+      padding: 12px 20px; text-align: center; font-size: 1.3em;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: none;
+      z-index: 100;
+    }
+    #ownerBanner span { font-weight: bold; }
+
+    /* Floating Owner Button */
+    #ownerBtn {
+      position: fixed; bottom: 80px; right: 20px;
+      width: 55px; height: 55px; background: #7c3aed;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 1.8em; cursor: pointer; box-shadow: 0 0 20px #c084fc;
+      z-index: 200; transition: 0.3s;
+    }
+    #ownerBtn:hover { transform: scale(1.15); }
+
+    /* Modals */
+    .modal {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.9); align-items: center; justify-content: center; z-index: 1000;
+    }
+    .modal-content {
+      background: #1a0033; padding: 30px; border-radius: 20px; width: 90%; max-width: 500px;
+      text-align: center; box-shadow: 0 0 30px #c084fc;
+    }
+    input[type="password"], textarea {
+      width: 100%; padding: 15px; margin: 15px 0; border-radius: 12px;
+      background: rgba(255,255,255,0.1); color: white; border: none; font-size: 1.1em;
+    }
+    .nav-bar {
+      position: fixed; bottom: 0; width: 100%; background: rgba(30,10,60,0.9);
+      display: flex; justify-content: space-around; padding: 15px 0; backdrop-filter: blur(10px);
+    }
+    .nav-bar button { font-size: 2.5em; background: none; border: none; color: white; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <!-- Owner Message Banner -->
+  <div id="ownerBanner">
+    <span id="bannerText"></span>
+  </div>
+
+  <header>
+    <h1>Galaxy</h1>
+    <p class="tagline">Hope you Enjoying Galaxy</p>
+  </header>
+
+  <div class="search-container">
+    <form id="searchForm">
+      <input type="text" id="searchInput" placeholder="Search anything on DuckDuckGo..." autofocus>
+    </form>
+  </div>
+
+  <div class="buttons">
+    <button type="submit" form="searchForm">Search</button>
+    <button onclick="window.open('https://discord.gg/yourinvite','_blank')">Join Discord</button>
+  </div>
+
+  <!-- Floating Owner Button -->
+  <div id="ownerBtn" title="Owner Panel">👑</div>
+
+  <!-- Password Modal -->
+  <div id="passwordModal" class="modal">
+    <div class="modal-content">
+      <h2>👑 Owner Login</h2>
+      <input type="password" id="passInput" placeholder="Enter passcode..." autofocus>
+      <button onclick="checkPasscode()" style="width:100%; margin-top:10px;">Enter Owner Panel</button>
+      <button onclick="closeModal('passwordModal')" style="background:#555; width:100%; margin-top:8px;">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Owner Panel Modal -->
+  <div id="ownerPanelModal" class="modal">
+    <div class="modal-content">
+      <h2>👑 Galaxy Owner Panel</h2>
+      <textarea id="messageInput" rows="5" placeholder="Type the message everyone will see..."></textarea>
+      <button onclick="saveOwnerMessage()" style="width:100%; margin:10px 0;">Save Message (Everyone sees this)</button>
+      <button onclick="closeModal('ownerPanelModal')" style="background:#555; width:100%;">Close</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <button>🏠</button>
+    <button>🔍</button>
+    <button>⚙️</button>
+  </div>
+
+  <script>
+    // ============== CHANGE THESE ==============
+    const JSON_URL = 'YOUR_NPOINT_URL_HERE';  // ← Replace with your npoint.io link
+    const PASSCODE = 'galaxy123';             // ← Change this to your secret passcode
+    // =========================================
+
+    const banner = document.getElementById('ownerBanner');
+    const bannerText = document.getElementById('bannerText');
+
+    // Load message from npoint.io on page load
+    async function loadOwnerMessage() {
+      if (JSON_URL === 'YOUR_NPOINT_URL_HERE') {
+        banner.style.display = 'none';
+        return;
+      }
+      try {
+        const res = await fetch(JSON_URL);
+        const data = await res.json();
+        if (data.ownerMessage) {
+          bannerText.textContent = data.ownerMessage;
+          banner.style.display = 'block';
+        } else {
+          banner.style.display = 'none';
+        }
+      } catch (e) {
+        console.log("No message yet or connection issue");
+        banner.style.display = 'none';
+      }
+    }
+
+    // Save new message (owner only)
+    async function saveOwnerMessage() {
+      const newMsg = document.getElementById('messageInput').value.trim();
+      if (!newMsg) return alert("Message can't be empty!");
+
+      try {
+        await fetch(JSON_URL, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ownerMessage: newMsg })
+        });
+        alert("✅ Message saved! Everyone visiting Galaxy will see it now.");
+        bannerText.textContent = newMsg;
+        banner.style.display = 'block';
+        closeModal('ownerPanelModal');
+      } catch (e) {
+        alert("Error saving — make sure you used a real npoint.io URL");
+      }
+    }
+
+    // Password check
+    function checkPasscode() {
+      const input = document.getElementById('passInput').value;
+      if (input === PASSCODE) {
+        closeModal('passwordModal');
+        // Teleport to owner panel
+        document.getElementById('ownerPanelModal').style.display = 'flex';
+        // Pre-fill current message
+        fetch(JSON_URL).then(r => r.json()).then(d => {
+          document.getElementById('messageInput').value = d.ownerMessage || '';
+        }).catch(() => {});
+      } else {
+        alert("❌ Wrong passcode!");
+      }
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+    }
+
+    // Search still works
+    const form = document.getElementById('searchForm');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const query = document.getElementById('searchInput').value.trim();
+      if (query) window.location.href = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
+    });
+
+    // Open password modal when clicking 👑
+    document.getElementById('ownerBtn').addEventListener('click', () => {
+      document.getElementById('passwordModal').style.display = 'flex';
+      document.getElementById('passInput').focus();
+    });
+
+    // Load the banner when page opens
+    window.onload = loadOwnerMessage;
+  </script>
+</body>
+</html>
