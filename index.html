@@ -103,7 +103,7 @@
 
   <div class="search-container">
     <form id="searchForm">
-      <input type="text" id="searchInput" placeholder="Search anything on DuckDuckGo..." autofocus>
+      <input type="text" id="searchInput" placeholder="Search anything..." autofocus>
     </form>
   </div>
 
@@ -142,10 +142,10 @@
   </div>
 
   <script>
-    // ============== CHANGE THESE ==============
+    // ============== CHANGE THESE IF NEEDED ==============
     const JSON_URL = 'YOUR_NPOINT_URL_HERE';  // ← Replace with your npoint.io link
-    const PASSCODE = 'galaxy123';             // ← Change this to your secret passcode
-    // =========================================
+    const PASSCODE = 'galaxy123';             // ← Change to your secret passcode
+    // ====================================================
 
     const banner = document.getElementById('ownerBanner');
     const bannerText = document.getElementById('bannerText');
@@ -196,9 +196,7 @@
       const input = document.getElementById('passInput').value;
       if (input === PASSCODE) {
         closeModal('passwordModal');
-        // Teleport to owner panel
         document.getElementById('ownerPanelModal').style.display = 'flex';
-        // Pre-fill current message
         fetch(JSON_URL).then(r => r.json()).then(d => {
           document.getElementById('messageInput').value = d.ownerMessage || '';
         }).catch(() => {});
@@ -211,12 +209,15 @@
       document.getElementById(modalId).style.display = 'none';
     }
 
-    // Search still works
+    // Search redirect → changed to Bing (less likely blocked on PGCPS)
     const form = document.getElementById('searchForm');
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const query = document.getElementById('searchInput').value.trim();
-      if (query) window.location.href = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
+      if (query) {
+        // Redirect to Bing (PGCPS usually allows Bing searches)
+        window.location.href = `https://www.bing.com/search?q=${encodeURIComponent(query)}`;
+      }
     });
 
     // Open password modal when clicking 👑
